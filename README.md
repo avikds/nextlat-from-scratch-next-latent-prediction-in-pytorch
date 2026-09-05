@@ -43,6 +43,24 @@ python scaffold.py
 - [x] **31.** self_speculative_generate
 - [x] **32.** speculative_stats
 
----
+## Results
 
-Built on Deep-ML.
+```
+grid 4x4, T=14, vocab=21, train sequences=1024
+GPT      next-token loss: 3.038 -> 1.459
+NextLat  next-token loss: 3.038 -> 1.634 | next-hidden 0.6609 -> 0.0052 | KL 0.0102 -> 0.0048
+
+metric                   GPT      NextLat
+valid_move_rate          0.8841   0.7249   (better = up)
+effective_rank           7.4881   2.9002   (better = down)
+sequence_compression     0.2333   0.1667   (better = up)
+detour_robustness        0.4250   0.2750   (better = up)
+(lower effective rank = more compact latent state; the true world has only 16 positions x 16 goals)
+
+self-speculative decoding (6 tokens, draft up to 4):
+  mean accepted drafts per cycle: 2.31
+  speedup in transformer passes:  3.00x
+  identical to greedy decoding:   True
+
+note: at this toy scale two effects are robust across seeds - NextLat's lower effective rank (a more compact latent state) and its usable drafts (GPT's untrained dynamics accept almost none). The other metrics are noisy on 60 pairs / 40 episodes; rerun with more training steps, sequences and trials before reading anything into small gaps.
+```
